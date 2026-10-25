@@ -1,5 +1,6 @@
 import { BookOpenCheck, Heart, Smile, Target } from 'lucide-react'
-import { CATEGORIES, recipes } from '../data/recipes'
+import { CATEGORIES } from '../data/meta'
+import { useBuiltInRecipes } from '../hooks/useAllRecipes'
 import { Button } from '../components/Button'
 import { Reveal } from '../components/Reveal'
 import { Section } from '../components/Section'
@@ -18,14 +19,15 @@ const team = [
   { name: 'Team Techniek', role: 'Platform', text: 'Bouwt de tools, zoals timers en portieregelaars, die koken makkelijker maken.' },
 ]
 
-const stats = [
-  { value: String(recipes.length), label: 'recepten om mee te beginnen' },
-  { value: String(CATEGORIES.length), label: 'categorieën voor elk moment' },
-  { value: String(recipes.reduce((n, r) => n + r.steps.length, 0)), label: 'duidelijke bereidingsstappen' },
-  { value: '100%', label: 'gratis te gebruiken' },
-]
 
 export default function About() {
+  const { recipes, loaded } = useBuiltInRecipes()
+  const stats = [
+    { value: loaded ? String(recipes.length) : '…', label: 'recepten om mee te beginnen' },
+    { value: String(CATEGORIES.length), label: 'categorieën voor elk moment' },
+    { value: loaded ? String(recipes.reduce((n, r) => n + r.steps.length, 0)) : '…', label: 'duidelijke bereidingsstappen' },
+    { value: '100%', label: 'gratis te gebruiken' },
+  ]
   useDocumentMeta('Over ons', 'Cookify helpt iedereen om op een eenvoudige en leuke manier te leren koken. Lees over onze missie en ons team.')
   return (
     <>

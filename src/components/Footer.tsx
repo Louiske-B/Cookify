@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Logo } from './Logo'
-import { CATEGORIES } from '../data/recipes'
+import { CATEGORIES } from '../data/meta'
 
 export function Footer() {
   return (

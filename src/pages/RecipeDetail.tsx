@@ -5,7 +5,7 @@ import { ArrowLeft, CheckCircle2, ChefHat, Circle, Clock, Lightbulb, Minus, Plus
 import { useAllRecipes } from '../hooks/useAllRecipes'
 import { useDocumentMeta } from '../hooks/useDocumentMeta'
 import { useCheckedIngredients, useCompleted, useDoneSteps } from '../hooks/useProgress'
-import { categoryLabel } from '../data/recipes'
+import { categoryLabel } from '../data/meta'
 import { SmartImage } from '../components/SmartImage'
 import { DifficultyBadge } from '../components/Badges'
 import { FavoriteButton } from '../components/FavoriteButton'

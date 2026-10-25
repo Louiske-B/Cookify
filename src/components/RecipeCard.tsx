@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { ListOrdered, Users } from 'lucide-react'
 import type { Recipe } from '../types'
-import { categoryLabel } from '../data/recipes'
+import { categoryLabel } from '../data/meta'
 import { SmartImage } from './SmartImage'
 import { DifficultyBadge, TimeBadge } from './Badges'
 import { FavoriteButton } from './FavoriteButton'

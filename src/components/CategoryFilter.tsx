@@ -1,5 +1,5 @@
 import type { Category } from '../types'
-import { CATEGORIES } from '../data/recipes'
+import { CATEGORIES } from '../data/meta'
 
 export type Filter = 'alles' | Category | 'snel'
 

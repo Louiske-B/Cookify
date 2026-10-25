@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRight, BookOpenCheck, ChefHat, Search, Sparkles } from 'lucide-react'
-import { CATEGORIES, HERO_IMAGE, recipes } from '../data/recipes'
+import { CATEGORIES, HERO_IMAGE } from '../data/meta'
+import { useBuiltInRecipes } from '../hooks/useAllRecipes'
+import type { Recipe } from '../types'
 import { Button } from '../components/Button'
 import { Section } from '../components/Section'
 import { RecipeCard } from '../components/RecipeCard'
@@ -9,11 +11,21 @@ import { Reveal } from '../components/Reveal'
 import { SmartImage } from '../components/SmartImage'
 import { useDocumentMeta } from '../hooks/useDocumentMeta'
 
-const bySlug = (slugs: string[]) => slugs.map((s) => recipes.find((r) => r.slug === s)!).filter(Boolean)
+const popularSlugs = ['pasta-carbonara', 'pizza-margherita', 'pannenkoeken', 'hamburgers']
+const featuredSlugs = ['thaise-groene-curry', 'brownies', 'shakshuka']
 
-const popular = bySlug(['pasta-carbonara', 'pizza-margherita', 'pannenkoeken', 'hamburgers'])
-const featured = bySlug(['thaise-groene-curry', 'brownies', 'shakshuka'])
-const quick = recipes.filter((r) => r.totalTime < 20).slice(0, 4)
+const pick = (list: Recipe[], slugs: string[]) =>
+  slugs.map((s) => list.find((r) => r.slug === s)).filter((r): r is Recipe => !!r)
+
+function CardSkeletons({ n }: { n: number }) {
+  return (
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4" aria-hidden>
+      {Array.from({ length: n }, (_, i) => (
+        <div key={i} className="card h-80 animate-pulse bg-muted" />
+      ))}
+    </div>
+  )
+}
 
 const steps = [
   {
@@ -35,6 +47,10 @@ const steps = [
 
 export default function Home() {
   const reduce = useReducedMotion()
+  const { recipes, loaded } = useBuiltInRecipes()
+  const popular = pick(recipes, popularSlugs)
+  const featured = pick(recipes, featuredSlugs)
+  const quick = recipes.filter((r) => r.totalTime < 20).slice(0, 4)
   useDocumentMeta(
     'Cookify',
     'Ontdek recepten, volg stap-voor-stap tutorials en word een echte keukenchef. Cookify: iedereen kan leren koken!',
@@ -105,13 +121,13 @@ export default function Home() {
         linkTo="/recepten"
         linkLabel="Alle recepten"
       >
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {!loaded ? <CardSkeletons n={4} /> : <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {popular.map((r, i) => (
             <Reveal key={r.id} delay={i * 0.08}>
               <RecipeCard recipe={r} />
             </Reveal>
           ))}
-        </div>
+        </div>}
       </Section>
 
       {/* Categorieën */}
@@ -124,7 +140,7 @@ export default function Home() {
       >
         <ul className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
           {CATEGORIES.map((c, i) => {
-            const sample = recipes.find((r) => r.category === c.id)
+            const sample = pick(recipes, [{ ontbijt: 'pannenkoeken', lunch: 'caesarsalade', avondeten: 'pasta-carbonara', dessert: 'brownies', snack: 'zelfgemaakte-frietjes' }[c.id]])[0]
             const count = recipes.filter((r) => r.category === c.id).length
             return (
               <Reveal as="li" key={c.id} delay={i * 0.06}>
@@ -146,7 +162,7 @@ export default function Home() {
                   <div className="absolute inset-x-0 bottom-0 p-4 text-white">
                     <span className="text-2xl" aria-hidden>{c.emoji}</span>
                     <h3 className="font-display text-xl font-bold">{c.plural}</h3>
-                    <p className="text-sm text-gray-200">{count} {count === 1 ? 'recept' : 'recepten'}</p>
+                    <p className="text-sm text-gray-200">{loaded ? `${count} ${count === 1 ? 'recept' : 'recepten'}` : ' '}</p>
                   </div>
                 </Link>
               </Reveal>
@@ -164,13 +180,13 @@ export default function Home() {
         linkTo="/recepten"
         linkLabel="Bekijk alle tutorials"
       >
-        <div className="grid gap-6 lg:grid-cols-3">
+        {!loaded ? <CardSkeletons n={3} /> : <div className="grid gap-6 lg:grid-cols-3">
           {featured.map((r, i) => (
             <Reveal key={r.id} delay={i * 0.1}>
               <RecipeCard recipe={r} variant="featured" />
             </Reveal>
           ))}
-        </div>
+        </div>}
       </Section>
 
       {/* Snel klaar */}
@@ -183,13 +199,13 @@ export default function Home() {
         linkTo="/recepten?categorie=snel"
         linkLabel="Alle snelle recepten"
       >
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {!loaded ? <CardSkeletons n={4} /> : <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {quick.map((r, i) => (
             <Reveal key={r.id} delay={i * 0.08}>
               <RecipeCard recipe={r} />
             </Reveal>
           ))}
-        </div>
+        </div>}
       </Section>
 
       {/* Hoe werkt het */}

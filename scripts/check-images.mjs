@@ -1,8 +1,10 @@
-// Controleert of elke Unsplash-afbeelding uit src/data/recipes.ts echt laadt (HTTP 200)
+// Controleert of elke Unsplash-afbeelding uit src/data/ echt laadt (HTTP 200)
 // en of geen enkele foto dubbel gebruikt wordt. Ook slugs en ids moeten uniek zijn.
-import { readFileSync } from 'node:fs'
+import { readFileSync, readdirSync } from 'node:fs'
 
-const src = readFileSync(new URL('../src/data/recipes.ts', import.meta.url), 'utf8')
+const dir = new URL('../src/data/recipes/', import.meta.url)
+const files = readdirSync(dir).filter((f) => f.endsWith('.ts') && f !== 'index.ts' && f !== 'helpers.ts')
+const src = files.map((f) => readFileSync(new URL(f, dir), 'utf8')).join(String.fromCharCode(10)) + readFileSync(new URL('../meta.ts', dir), 'utf8')
 const all = [...src.matchAll(/u\('([0-9a-z-]+)'\)/g)].map((m) => m[1])
 const ids = [...new Set(all)]
 

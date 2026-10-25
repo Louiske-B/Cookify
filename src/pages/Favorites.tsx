@@ -8,7 +8,7 @@ import { RecipeCard } from '../components/RecipeCard'
 import { Button } from '../components/Button'
 
 export default function Favorites() {
-  const { recipes } = useAllRecipes()
+  const { recipes, loaded } = useAllRecipes()
   const { favorites } = useFavorites()
   const { count } = useCompleted()
   useDocumentMeta('Favorieten', 'Je bewaarde Cookify-recepten, altijd binnen handbereik.')
@@ -34,7 +34,13 @@ export default function Favorites() {
         </div>
       </header>
 
-      {saved.length === 0 ? (
+      {!loaded && favorites.length > 0 ? (
+        <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" aria-hidden>
+          {favorites.map((slug) => (
+            <li key={slug} className="card h-80 animate-pulse bg-muted" />
+          ))}
+        </ul>
+      ) : saved.length === 0 ? (
         <div className="card mt-10 flex flex-col items-center gap-4 px-6 py-16 text-center">
           <span className="flex h-16 w-16 items-center justify-center rounded-full bg-brand-100 text-brand-700">
             <Heart className="h-8 w-8" aria-hidden />
