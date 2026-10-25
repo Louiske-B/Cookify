@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Fish, Heart, Menu, Moon, Sun, X } from 'lucide-react'
+import { Fish, Globe2, Heart, Menu, Moon, Sun, X } from 'lucide-react'
 import { Logo } from './Logo'
 import { useTheme } from '../hooks/useTheme'
 import { useFavorites } from '../hooks/useFavorites'
@@ -10,6 +10,7 @@ const links = [
   { to: '/', label: 'Home', end: true },
   { to: '/recepten', label: 'Recepten' },
   { to: '/recepten?categorie=sushi', label: 'Sushi', icon: Fish },
+  { to: '/keukens', label: 'Keukens', icon: Globe2 },
   { to: '/eigen-recept', label: 'Eigen recept' },
   { to: '/over-ons', label: 'Over ons' },
 ]

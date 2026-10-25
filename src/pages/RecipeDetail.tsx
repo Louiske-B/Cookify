@@ -13,6 +13,7 @@ import { Timer } from '../components/Timer'
 import { Button } from '../components/Button'
 import { Confetti } from '../components/Confetti'
 import { RawFishWarning } from '../components/RawFishWarning'
+import { AllergenBadges, SpiceLevelBadge } from '../components/SpiceAndAllergens'
 import { useToast } from '../components/Toast'
 import { formatMinutes, scaleIngredient } from '../lib/format'
 import NotFound from './NotFound'
@@ -106,6 +107,7 @@ function Detail({ recipe, basis }: { recipe: Recipe; basis?: Recipe }) {
               <Users className="h-4 w-4" aria-hidden /> {recipe.servings} porties
             </span>
             <DifficultyBadge difficulty={recipe.difficulty} className="!px-4 !py-2 !text-sm" />
+            <SpiceLevelBadge level={recipe.pittig} withLabel className="!px-4 !py-2 !text-sm" />
             <FavoriteButton slug={recipe.slug} title={recipe.title} variant="inline" />
           </div>
         </div>
@@ -114,6 +116,8 @@ function Detail({ recipe, basis }: { recipe: Recipe; basis?: Recipe }) {
           <div className="flex gap-1.5"><dt>Voorbereiden:</dt><dd className="font-semibold text-ink">{formatMinutes(recipe.prepTime)}</dd></div>
           <div className="flex gap-1.5"><dt>Koken:</dt><dd className="font-semibold text-ink">{recipe.cookTime ? formatMinutes(recipe.cookTime) : 'geen'}</dd></div>
         </dl>
+
+        <AllergenBadges allergenen={recipe.allergenen} />
 
         {recipe.rauweVis && <RawFishWarning alternatief={recipe.rauweVis.alternatief} />}
 

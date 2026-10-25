@@ -1,4 +1,4 @@
-import type { Category, Cuisine, Diet } from '../types'
+import type { Allergen, Category, Cuisine, Diet } from '../types'
 import { u } from './recipes/helpers.ts'
 
 export const HERO_IMAGE = u('1759409117421-1a64af35f118')
@@ -21,6 +21,8 @@ export const CUISINES: { id: Cuisine; label: string }[] = [
   { id: 'frans', label: 'Frans' },
   { id: 'aziatisch', label: 'Aziatisch' },
   { id: 'japans', label: 'Japans' },
+  { id: 'thais', label: 'Thais' },
+  { id: 'chinees', label: 'Chinees' },
   { id: 'mexicaans', label: 'Mexicaans' },
   { id: 'midden-oosten', label: 'Midden-Oosten' },
   { id: 'amerikaans', label: 'Amerikaans' },
@@ -33,3 +35,15 @@ export const DIETS: { id: Diet; label: string }[] = [
   { id: 'vegan', label: 'Vegan' },
   { id: 'glutenvrij', label: 'Glutenvrij' },
 ]
+
+export const ALLERGENS: { id: Allergen; label: string }[] = [
+  { id: 'pinda', label: 'Pinda' },
+  { id: 'noten', label: 'Noten' },
+  { id: 'schaaldieren', label: 'Schaal- en weekdieren' },
+  { id: 'soja', label: 'Soja' },
+  { id: 'sesam', label: 'Sesam' },
+  { id: 'gluten', label: 'Gluten' },
+  { id: 'vis', label: 'Vis' },
+]
+
+export const SPICE_LABELS = ['Niet pittig', 'Mild', 'Pittig', 'Heel pittig'] as const

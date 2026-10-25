@@ -20,6 +20,7 @@ export function Footer() {
             <li><Link className="hover:text-brand-700 hover:underline" to="/">Home</Link></li>
             <li><Link className="hover:text-brand-700 hover:underline" to="/recepten">Alle recepten</Link></li>
             <li><Link className="hover:text-brand-700 hover:underline" to="/recepten?categorie=snel">Onder 20 minuten</Link></li>
+            <li><Link className="hover:text-brand-700 hover:underline" to="/keukens">Wereldkeukens</Link></li>
             <li><Link className="hover:text-brand-700 hover:underline" to="/favorieten">Favorieten</Link></li>
           </ul>
         </nav>

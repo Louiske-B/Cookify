@@ -8,6 +8,8 @@ const Recipes = lazy(() => import('./pages/Recipes'))
 const RecipeDetail = lazy(() => import('./pages/RecipeDetail'))
 const Favorites = lazy(() => import('./pages/Favorites'))
 const CustomRecipe = lazy(() => import('./pages/CustomRecipe'))
+const Cuisines = lazy(() => import('./pages/Cuisines'))
+const CuisineDetail = lazy(() => import('./pages/CuisineDetail'))
 const About = lazy(() => import('./pages/About'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
@@ -29,6 +31,8 @@ export default function App() {
           <Route index element={<Home />} />
           <Route path="recepten" element={<Recipes />} />
           <Route path="recepten/:slug" element={<RecipeDetail />} />
+          <Route path="keukens" element={<Cuisines />} />
+          <Route path="keukens/:id" element={<CuisineDetail />} />
           <Route path="favorieten" element={<Favorites />} />
           <Route path="eigen-recept" element={<CustomRecipe />} />
           <Route path="over-ons" element={<About />} />

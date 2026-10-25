@@ -13,6 +13,16 @@ const GLUTEN = /\b(bloem|pasta|spaghetti|penne|fusilli|macaroni|tagliatelle|lasa
 
 const slugSet = new Set(recipes.map((r) => r.slug))
 const RAW_FISH = /sashimi|rauwe? (zalm|tonijn|vis)|sushi-?kwaliteit/i
+const SPICY_ING = /pittige mayo|chili|chilli|sambal|sriracha|cayenne|jalape|currypasta|hete saus|harissa|doubanjiang|sichuan|rode peper|groene peper|spaanse peper|peperkorrel|chilibonen/i
+const ALLERGEN_RULES = {
+  pinda: /pinda/i,
+  noten: /cashew|walnoot|walnoten|amandel|pistache|hazelnoot|pecan|noten/i,
+  schaaldieren: /garnaal|garnalen|krab(?!stick)|oestersaus|mossel|scampi|inktvis|kreeft|schelp/i,
+  soja: /soja|tofu|tamari(?!nde)|miso|edamame|ketjap|hoisin|tempeh|doubanjiang|chilibonen|zwarte bonensaus/i,
+  sesam: /sesam|tahin/i,
+  gluten: /(?<!zonne)bloem|(?<!rijst|glas)noedels|mienoedels|mie|tarwe|brood|paneermeel|deeg|wonton|loempiavel|dumpling|gyoza|bao|tempurameel|panko|couscous|bulgur|pasta|(?<!glutenvrije )sojasaus|oestersaus|hoisin|baozi|vellen|tortilla/i,
+  vis: /vissaus|ansjovis|vis|zalm|tonijn|paling|dashi|vissaus/i,
+}
 const seen = new Map()
 const imgs = new Map()
 for (const r of recipes) {
@@ -37,6 +47,17 @@ for (const r of recipes) {
   if (r.cookTime >= 20 && tot < r.cookTime * 0.4 && !/frituur|marineer/.test(r.slug)) warn(r, `timers (${tot} min) dekken kooktijd (${r.cookTime}) slecht`)
 
   const names = r.ingredients.map((i) => i.name).join(' | ')
+  if (SPICY_ING.test(names) && !(r.pittig > 0)) warn(r, `pittige ingrediënten (${names.match(SPICY_ING)[0]}) maar geen pittig-niveau`)
+  if (r.pittig !== undefined && ![0, 1, 2, 3].includes(r.pittig)) warn(r, 'pittig moet 0-3 zijn')
+  if (['thais', 'chinees'].includes(r.cuisine)) {
+    if (r.pittig === undefined) warn(r, 'pittig ontbreekt')
+    if (!Array.isArray(r.allergenen)) warn(r, 'allergenen ontbreekt')
+    else for (const [a, rx] of Object.entries(ALLERGEN_RULES)) if (rx.test(names) && !r.allergenen.includes(a)) warn(r, `allergeen ${a} ontbreekt (ingrediënt: ${names.match(rx)[0]})`)
+    if (r.diet?.includes('glutenvrij') && r.allergenen?.includes('gluten')) warn(r, 'glutenvrij maar allergeen gluten')
+    if ((r.diet?.includes('vegan') || r.diet?.includes('vegetarisch')) && r.allergenen?.includes('vis')) warn(r, 'vegetarisch maar allergeen vis')
+  }
+  if (r.diet?.includes('vegan') && r.allergenen?.some((a) => a === 'schaaldieren' || a === 'vis')) warn(r, 'vegan met vis/schaaldier-allergeen')
+  if (/frituur/i.test(names) && !/(olie.*(nooit|onbewaakt)|nooit.*(onbewaakt|blussen)|onbewaakt|blus)/i.test(r.chefTip + r.steps.map((x) => x.text).join(' ')) && ['thais', 'chinees'].includes(r.cuisine)) warn(r, 'frituren zonder veiligheidstip')
   if (r.basisRecept && !slugSet.has(r.basisRecept)) warn(r, `basisRecept bestaat niet: ${r.basisRecept}`)
   if (r.basisRecept === r.slug) warn(r, 'basisRecept verwijst naar zichzelf')
   if (RAW_FISH.test(names) && !r.rauweVis) warn(r, 'rauwe vis maar geen rauweVis-waarschuwing')

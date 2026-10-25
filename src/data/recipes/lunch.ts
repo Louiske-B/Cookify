@@ -503,6 +503,7 @@ export const lunch: Recipe[] = [
     category: 'lunch',
     cuisine: 'aziatisch',
     diet: [],
+    pittig: 1,
     prepTime: 25,
     cookTime: 10,
     difficulty: 'Uitdagend',

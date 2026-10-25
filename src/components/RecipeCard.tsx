@@ -5,6 +5,7 @@ import { categoryLabel } from '../data/meta'
 import { SmartImage } from './SmartImage'
 import { DifficultyBadge, TimeBadge } from './Badges'
 import { FavoriteButton } from './FavoriteButton'
+import { SpiceLevelBadge } from './SpiceAndAllergens'
 
 interface Props {
   recipe: Recipe
@@ -47,6 +48,7 @@ export function RecipeCard({ recipe, variant = 'default', eager = false }: Props
           <div className="mt-auto flex flex-wrap items-center gap-2 pt-4">
             <TimeBadge minutes={recipe.totalTime} quick={recipe.totalTime < 20} />
             <DifficultyBadge difficulty={recipe.difficulty} />
+            <SpiceLevelBadge level={recipe.pittig} />
             {featured && (
               <>
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-xs font-semibold ring-1 ring-line">

@@ -8,6 +8,8 @@ export type Cuisine =
   | 'frans'
   | 'aziatisch'
   | 'japans'
+  | 'thais'
+  | 'chinees'
   | 'mexicaans'
   | 'midden-oosten'
   | 'amerikaans'
@@ -15,6 +17,11 @@ export type Cuisine =
   | 'overig'
 
 export type Diet = 'vegetarisch' | 'vegan' | 'glutenvrij'
+
+export type Allergen = 'pinda' | 'noten' | 'schaaldieren' | 'soja' | 'sesam' | 'gluten' | 'vis'
+
+/** 0 = niet pittig, 1 = mild, 2 = pittig, 3 = heel pittig */
+export type SpiceLevel = 0 | 1 | 2 | 3
 
 export interface Ingredient {
   amount: number | null
@@ -38,6 +45,10 @@ export interface Recipe {
   cuisine?: Cuisine
   /** Dieet-eigenschappen. Vegan impliceert vegetarisch. */
   diet?: Diet[]
+  /** Pittigheid van 0 (niet pittig) tot 3 (heel pittig). Ontbreekt = niet pittig. */
+  pittig?: SpiceLevel
+  /** Allergenen waar relevant (bij de Aziatische keukens altijd ingevuld). */
+  allergenen?: Allergen[]
   prepTime: number
   cookTime: number
   totalTime: number

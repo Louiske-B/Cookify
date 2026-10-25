@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRight, BookOpenCheck, ChefHat, Search, Sparkles } from 'lucide-react'
-import { CATEGORIES, HERO_IMAGE } from '../data/meta'
+import { CATEGORIES, CUISINES, HERO_IMAGE } from '../data/meta'
+import { CUISINE_INFO } from '../data/cuisines'
 import { useBuiltInRecipes } from '../hooks/useAllRecipes'
 import type { Recipe } from '../types'
 import { Button } from '../components/Button'
@@ -164,6 +165,34 @@ export default function Home() {
                     <h3 className="font-display text-xl font-bold">{c.plural}</h3>
                     <p className="text-sm text-gray-200">{loaded ? `${count} ${count === 1 ? 'recept' : 'recepten'}` : ' '}</p>
                   </div>
+                </Link>
+              </Reveal>
+            )
+          })}
+        </ul>
+      </Section>
+
+      {/* Wereldkeukens */}
+      <Section
+        id="keukens"
+        eyebrow="Proef de wereld"
+        title="Wereldkeukens"
+        subtitle="Van Thaise curry tot Belgische stoofpot: kies een keuken en ontdek typische smaken."
+        linkTo="/keukens"
+        linkLabel="Alle keukens"
+      >
+        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+          {['thais', 'chinees', 'japans', 'italiaans', 'belgisch', 'mexicaans'].map((id, i) => {
+            const info = CUISINE_INFO.find((c) => c.id === id)!
+            const label = CUISINES.find((c) => c.id === id)?.label ?? id
+            return (
+              <Reveal as="li" key={id} delay={i * 0.05}>
+                <Link
+                  to={`/keukens/${id}`}
+                  className="card flex flex-col items-center gap-2 p-5 text-center transition-all hover:-translate-y-1 hover:border-brand-500 hover:shadow-lift"
+                >
+                  <span className="text-4xl" aria-hidden>{info.emoji}</span>
+                  <span className="font-display text-lg font-bold">{label}</span>
                 </Link>
               </Reveal>
             )
