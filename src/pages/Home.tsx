@@ -138,9 +138,9 @@ export default function Home() {
         title="Kies een categorie"
         subtitle="Van een snel ontbijt tot een dessert om van te smullen."
       >
-        <ul className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+        <ul className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
           {CATEGORIES.map((c, i) => {
-            const sample = pick(recipes, [{ ontbijt: 'pannenkoeken', lunch: 'caesarsalade', avondeten: 'pasta-carbonara', dessert: 'brownies', snack: 'zelfgemaakte-frietjes' }[c.id]])[0]
+            const sample = pick(recipes, [{ ontbijt: 'pannenkoeken', lunch: 'caesarsalade', avondeten: 'pasta-carbonara', dessert: 'brownies', snack: 'zelfgemaakte-frietjes', sushi: 'california-roll' }[c.id]])[0]
             const count = recipes.filter((r) => r.category === c.id).length
             return (
               <Reveal as="li" key={c.id} delay={i * 0.06}>

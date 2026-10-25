@@ -571,7 +571,7 @@ export const ontbijt: Recipe[] = [
     title: 'Tamagoyaki (Japanse opgerolde omelet)',
     description: 'Zachte, zoete Japanse omelet in lagen opgerold. Oefening baart kunst, maar het resultaat is prachtig.',
     category: 'ontbijt',
-    cuisine: 'aziatisch',
+    cuisine: 'japans',
     diet: [],
     prepTime: 5,
     cookTime: 10,

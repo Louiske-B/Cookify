@@ -135,6 +135,7 @@ export const lunch: Recipe[] = [
     cookTime: 0,
     difficulty: 'Makkelijk',
     servings: 2,
+    rauweVis: { alternatief: 'gerookte zalm, gekookte garnalen, gebakken tofu of extra edamame en avocado in plaats van rauwe zalm.' },
     image: u('1768326119231-bf064c1b8fdf'),
     ingredients: [
       { amount: 200, unit: 'g', name: 'sushirijst, gekookt en afgekoeld' },

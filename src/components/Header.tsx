@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Link, NavLink, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Heart, Menu, Moon, Sun, X } from 'lucide-react'
+import { Fish, Heart, Menu, Moon, Sun, X } from 'lucide-react'
 import { Logo } from './Logo'
 import { useTheme } from '../hooks/useTheme'
 import { useFavorites } from '../hooks/useFavorites'
@@ -9,6 +9,7 @@ import { useFavorites } from '../hooks/useFavorites'
 const links = [
   { to: '/', label: 'Home', end: true },
   { to: '/recepten', label: 'Recepten' },
+  { to: '/recepten?categorie=sushi', label: 'Sushi', icon: Fish },
   { to: '/eigen-recept', label: 'Eigen recept' },
   { to: '/over-ons', label: 'Over ons' },
 ]
@@ -18,7 +19,16 @@ export function Header() {
   const { count } = useFavorites()
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const { pathname } = useLocation()
+  const { pathname, search } = useLocation()
+  const onSushi = pathname === '/recepten' && new URLSearchParams(search).get('categorie') === 'sushi'
+
+  // De query telt mee, zodat 'Recepten' en 'Sushi' niet tegelijk actief zijn.
+  const isActive = (to: string, end?: boolean) => {
+    if (to.includes('categorie=sushi')) return onSushi
+    if (to === '/recepten') return pathname.startsWith('/recepten') && !onSushi
+    if (end) return pathname === to
+    return pathname === to || pathname.startsWith(to + '/')
+  }
 
   useEffect(() => setOpen(false), [pathname])
 
@@ -36,9 +46,9 @@ export function Header() {
     return () => window.removeEventListener('keydown', onKey)
   }, [open])
 
-  const linkCls = ({ isActive }: { isActive: boolean }) =>
-    `rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
-      isActive ? 'bg-brand-100 text-brand-700' : 'text-ink hover:bg-muted hover:text-brand-700'
+  const linkCls = (active: boolean) =>
+    `inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+      active ? 'bg-brand-100 text-brand-700' : 'text-ink hover:bg-muted hover:text-brand-700'
     }`
 
   return (
@@ -54,9 +64,15 @@ export function Header() {
 
         <nav aria-label="Hoofdmenu" className="hidden items-center gap-1 md:flex">
           {links.map((l) => (
-            <NavLink key={l.to} to={l.to} end={l.end} className={linkCls}>
+            <Link
+              key={l.to}
+              to={l.to}
+              aria-current={isActive(l.to, 'end' in l ? l.end : undefined) ? 'page' : undefined}
+              className={linkCls(isActive(l.to, 'end' in l ? l.end : undefined))}
+            >
+              {'icon' in l && l.icon ? <l.icon className="h-4 w-4" aria-hidden /> : null}
               {l.label}
-            </NavLink>
+            </Link>
           ))}
         </nav>
 
@@ -111,19 +127,18 @@ export function Header() {
             className="overflow-hidden border-t border-line md:hidden"
           >
             <ul className="container-page flex flex-col gap-1 py-3">
-              {[...links, { to: '/favorieten', label: `Favorieten (${count})` }].map((l) => (
+              {[...links, { to: '/favorieten', label: `Favorieten (${count})` } as (typeof links)[number]].map((l) => (
                 <li key={l.to}>
-                  <NavLink
+                  <Link
                     to={l.to}
-                    end={'end' in l ? l.end : undefined}
-                    className={({ isActive }) =>
-                      `block rounded-2xl px-4 py-3 text-base font-semibold ${
-                        isActive ? 'bg-brand-100 text-brand-700' : 'hover:bg-muted'
-                      }`
-                    }
+                    aria-current={isActive(l.to, 'end' in l ? l.end : undefined) ? 'page' : undefined}
+                    className={`flex items-center gap-2 rounded-2xl px-4 py-3 text-base font-semibold ${
+                      isActive(l.to, 'end' in l ? l.end : undefined) ? 'bg-brand-100 text-brand-700' : 'hover:bg-muted'
+                    }`}
                   >
+                    {'icon' in l && l.icon ? <l.icon className="h-5 w-5" aria-hidden /> : null}
                     {l.label}
-                  </NavLink>
+                  </Link>
                 </li>
               ))}
             </ul>

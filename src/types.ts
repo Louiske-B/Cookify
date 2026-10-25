@@ -1,4 +1,4 @@
-export type Category = 'ontbijt' | 'lunch' | 'avondeten' | 'dessert' | 'snack'
+export type Category = 'ontbijt' | 'lunch' | 'avondeten' | 'dessert' | 'snack' | 'sushi'
 export type Difficulty = 'Makkelijk' | 'Gemiddeld' | 'Uitdagend'
 
 export type Cuisine =
@@ -7,6 +7,7 @@ export type Cuisine =
   | 'italiaans'
   | 'frans'
   | 'aziatisch'
+  | 'japans'
   | 'mexicaans'
   | 'midden-oosten'
   | 'amerikaans'
@@ -47,5 +48,9 @@ export interface Recipe {
   steps: Step[]
   chefTip: string
   tags: string[]
+  /** Slug van een recept dat eerst gemaakt moet worden (bv. sushirijst). */
+  basisRecept?: string
+  /** Recept met rauwe vis: toont een vaste veiligheidswaarschuwing met dit alternatief. */
+  rauweVis?: { alternatief: string }
   custom?: boolean
 }

@@ -9,6 +9,7 @@ import type { Filter } from '../components/CategoryFilter'
 import { ExtraFilters, isCuisine, parseDiets } from '../components/ExtraFilters'
 import type { Cuisine, Diet } from '../types'
 import { SearchBar } from '../components/SearchBar'
+import { SushiLanding } from '../components/SushiLanding'
 import { RecipeCard } from '../components/RecipeCard'
 import { Button } from '../components/Button'
 import { normalize } from '../lib/format'
@@ -111,6 +112,8 @@ export default function Recipes() {
           </div>
         </div>
       </div>
+
+      {filter === 'sushi' && <SushiLanding />}
 
       <p className="mt-8 text-sm font-semibold text-ink-soft" role="status" aria-live="polite" data-testid="result-count">
         {loaded ? `${results.length} ${results.length === 1 ? 'recept' : 'recepten'} gevonden` : 'Recepten laden…'}

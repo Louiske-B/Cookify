@@ -9,6 +9,7 @@ export const CATEGORIES: { id: Category; label: string; plural: string; blurb: s
   { id: 'avondeten', label: 'Avondeten', plural: 'Avondeten', blurb: 'Hoofdgerechten voor aan tafel', emoji: '🍝' },
   { id: 'dessert', label: 'Desserts', plural: 'Desserts', blurb: 'Zoete verwennerij', emoji: '🍫' },
   { id: 'snack', label: 'Snacks', plural: 'Snacks', blurb: 'Lekker voor tussendoor', emoji: '🍟' },
+  { id: 'sushi', label: 'Sushi', plural: 'Sushi', blurb: 'Maki, nigiri en meer', emoji: '🍣' },
 ]
 
 export const categoryLabel = (c: Category) => CATEGORIES.find((x) => x.id === c)?.label ?? c
@@ -19,6 +20,7 @@ export const CUISINES: { id: Cuisine; label: string }[] = [
   { id: 'italiaans', label: 'Italiaans' },
   { id: 'frans', label: 'Frans' },
   { id: 'aziatisch', label: 'Aziatisch' },
+  { id: 'japans', label: 'Japans' },
   { id: 'mexicaans', label: 'Mexicaans' },
   { id: 'midden-oosten', label: 'Midden-Oosten' },
   { id: 'amerikaans', label: 'Amerikaans' },

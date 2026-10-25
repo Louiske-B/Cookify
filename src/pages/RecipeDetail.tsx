@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowLeft, CheckCircle2, ChefHat, Circle, Clock, Lightbulb, Minus, Plus, RotateCcw, Users } from 'lucide-react'
+import { ArrowLeft, ArrowRight, CheckCircle2, ChefHat, Circle, Clock, Lightbulb, Minus, Plus, RotateCcw, Users } from 'lucide-react'
 import { useAllRecipes } from '../hooks/useAllRecipes'
 import { useDocumentMeta } from '../hooks/useDocumentMeta'
 import { useCheckedIngredients, useCompleted, useDoneSteps } from '../hooks/useProgress'
@@ -12,6 +12,7 @@ import { FavoriteButton } from '../components/FavoriteButton'
 import { Timer } from '../components/Timer'
 import { Button } from '../components/Button'
 import { Confetti } from '../components/Confetti'
+import { RawFishWarning } from '../components/RawFishWarning'
 import { useToast } from '../components/Toast'
 import { formatMinutes, scaleIngredient } from '../lib/format'
 import NotFound from './NotFound'
@@ -33,10 +34,11 @@ export default function RecipeDetail() {
     }
     return <NotFound />
   }
-  return <Detail key={recipe.id} recipe={recipe} />
+  const basis = recipe.basisRecept ? recipes.find((r) => r.slug === recipe.basisRecept) : undefined
+  return <Detail key={recipe.id} recipe={recipe} basis={basis} />
 }
 
-function Detail({ recipe }: { recipe: Recipe }) {
+function Detail({ recipe, basis }: { recipe: Recipe; basis?: Recipe }) {
   const [servings, setServings] = useState(recipe.servings)
   const [celebrate, setCelebrate] = useState(false)
   const { checked, toggle: toggleIng, reset: resetIng } = useCheckedIngredients(recipe.slug)
@@ -113,10 +115,27 @@ function Detail({ recipe }: { recipe: Recipe }) {
           <div className="flex gap-1.5"><dt>Koken:</dt><dd className="font-semibold text-ink">{recipe.cookTime ? formatMinutes(recipe.cookTime) : 'geen'}</dd></div>
         </dl>
 
+        {recipe.rauweVis && <RawFishWarning alternatief={recipe.rauweVis.alternatief} />}
+
         <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,380px)_1fr] lg:items-start">
           {/* Ingrediënten */}
           <section aria-labelledby="ingredienten" className="card p-6 lg:sticky lg:top-24">
             <h2 id="ingredienten" className="text-2xl font-bold">Ingrediënten</h2>
+
+            {basis && (
+              <Link
+                to={`/recepten/${basis.slug}`}
+                data-testid="basisrecept"
+                className="group mt-4 flex items-center gap-3 rounded-2xl border-2 border-brand-400 bg-brand-50 p-3 transition-colors hover:border-brand-500"
+              >
+                <span className="min-w-0 flex-1">
+                  <span className="block text-xs font-bold uppercase tracking-wider text-brand-700">Eerst nodig</span>
+                  <span className="block font-display text-lg font-bold leading-tight">{basis.title}</span>
+                  <span className="block text-sm text-ink-soft">Maak dit basisrecept eerst en kom daarna terug.</span>
+                </span>
+                <ArrowRight className="h-5 w-5 shrink-0 text-brand-700 transition-transform group-hover:translate-x-1" aria-hidden />
+              </Link>
+            )}
 
             <div className="mt-4 flex items-center justify-between gap-3 rounded-2xl bg-muted p-2 ring-1 ring-line">
               <span id="porties-label" className="pl-3 text-sm font-semibold">Porties</span>

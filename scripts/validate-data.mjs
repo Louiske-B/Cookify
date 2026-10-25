@@ -9,8 +9,10 @@ const warn = (r, msg) => problems.push(`${r.slug}: ${msg}`)
 const MEAT = /\b(kip|kipfilet|kippen|rund|rundvlees|rundergehakt|gehakt|spek|spekblokjes|ham|worst|rookworst|chorizo|zalm|tonijn|vis|garnalen?|mosselen|bacon|lam|lams|varken|kalf|ansjovis|gelatine|vlees|biefstuk|entrecote|kabeljauw|kalkoen|eend|pancetta|guanciale|salami|schol|haring|krab|reepjes kip|draadjesvlees|speklapjes|runderbouillon|kippenbouillon|vissaus)\b/i
 const ANIMAL = /\b(ei|eieren|eidooiers?|eiwit(ten)?|melk|boter|kaas|room|slagroom|zure room|yoghurt|honing|feta|mozzarella|parmezaan|pecorino|roomkaas|mascarpone|mayonaise|ricotta|kwark|karnemelk|cheddar|gruyère|geitenkaas|brie|halloumi|crème fraîche|condensmelk|vla)\b/i
 const VEGAN_OK = /(kokos|plantaardig|soja|amandel|haver|rijst)(melk|drank|room|yoghurt|boter)|pindaboter|notenboter|amandelboter|kokosboter|plantaardige boter|veganistisch|vegan/i
-const GLUTEN = /\b(bloem|pasta|spaghetti|penne|fusilli|macaroni|tagliatelle|lasagnebladen|gnocchi|brood|broodje|broodjes|stokbrood|ciabatta|baguette|pita|tortilla|tortilla's|wrap|paneermeel|couscous|bulgur|sojasaus|bladerdeeg|filodeeg|deeg|pizzadeeg|wafel|koekjes|speculaas|digestive|lange vingers|noedels|vermicelli|beschuit|bier|havermout|granola|seitan|croutons|loempiavellen|gyozavellen|bakmeel|rijstwafel|mie|udon|ramen|biscuit)\b/i
+const GLUTEN = /\b(bloem|pasta|spaghetti|penne|fusilli|macaroni|tagliatelle|lasagnebladen|gnocchi|brood|broodje|broodjes|stokbrood|ciabatta|baguette|pita|tortilla|tortilla's|wrap|paneermeel|couscous|bulgur|sojasaus|bladerdeeg|filodeeg|deeg|pizzadeeg|wafel|koekjes|speculaas|digestive|lange vingers|noedels|vermicelli|surimi|krabstick|beschuit|bier|havermout|granola|seitan|croutons|loempiavellen|gyozavellen|bakmeel|rijstwafel|mie|udon|ramen|biscuit)\b/i
 
+const slugSet = new Set(recipes.map((r) => r.slug))
+const RAW_FISH = /sashimi|rauwe? (zalm|tonijn|vis)|sushi-?kwaliteit/i
 const seen = new Map()
 const imgs = new Map()
 for (const r of recipes) {
@@ -35,6 +37,12 @@ for (const r of recipes) {
   if (r.cookTime >= 20 && tot < r.cookTime * 0.4 && !/frituur|marineer/.test(r.slug)) warn(r, `timers (${tot} min) dekken kooktijd (${r.cookTime}) slecht`)
 
   const names = r.ingredients.map((i) => i.name).join(' | ')
+  if (r.basisRecept && !slugSet.has(r.basisRecept)) warn(r, `basisRecept bestaat niet: ${r.basisRecept}`)
+  if (r.basisRecept === r.slug) warn(r, 'basisRecept verwijst naar zichzelf')
+  if (RAW_FISH.test(names) && !r.rauweVis) warn(r, 'rauwe vis maar geen rauweVis-waarschuwing')
+  if (r.rauweVis && !RAW_FISH.test(names)) warn(r, 'rauweVis-waarschuwing maar geen rauwe vis in de ingrediënten')
+  if (r.rauweVis && r.rauweVis.alternatief.length < 20) warn(r, 'alternatief te kort')
+  if (r.rauweVis && (r.diet ?? []).some((d) => d === 'vegetarisch' || d === 'vegan')) warn(r, 'vegetarisch met rauwe vis')
   const veg = r.diet?.includes('vegetarisch') || r.diet?.includes('vegan')
   if (veg && MEAT.test(names)) warn(r, `vegetarisch maar bevat vlees/vis: ${names.match(MEAT)[0]}`)
   if (r.diet?.includes('vegan')) {
