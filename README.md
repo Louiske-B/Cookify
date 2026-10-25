@@ -11,7 +11,8 @@ npm install
 npm run dev        # ontwikkelserver op http://localhost:5173
 npm run build      # typecheck + productiebuild naar dist/
 npm run preview    # build lokaal bekijken
-npm run check-images   # controleert of alle Unsplash-foto's HTTP 200 geven
+npm run check-images   # controleert of alle Unsplash-foto's HTTP 200 geven en uniek zijn
+npm run validate-data  # controleert receptdata (velden, dieet-tags, tijden, dubbele slugs/foto's)
 ```
 
 ## Opslag
@@ -26,7 +27,8 @@ src/
   components/  herbruikbare UI (RecipeCard, Timer, Toast, ...)
   pages/       Home, Recipes, RecipeDetail, Favorites, CustomRecipe, About, NotFound
   hooks/       useFavorites, useLocalStorage, useCustomRecipes, useTimer, useTheme, ...
-  data/        recipes.ts (14 voorbeeldrecepten)
+  data/        meta.ts (categorieën, keukens, diëten) en recipes/ (per categorie: ontbijt, lunch,
+               avondeten, desserts, snacks; index.ts laadt ze lazy)
   lib/         opslag, afbeeldingen, formattering, geluid
 ```
 

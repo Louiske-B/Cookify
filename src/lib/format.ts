@@ -9,9 +9,9 @@ export function formatMinutes(min: number) {
 
 const FRACTIONS: [number, string][] = [
   [0.25, '¼'],
-  [0.33, '⅓'],
+  [1 / 3, '⅓'],
   [0.5, '½'],
-  [0.67, '⅔'],
+  [2 / 3, '⅔'],
   [0.75, '¾'],
 ]
 
@@ -19,9 +19,10 @@ export function formatAmount(n: number) {
   if (n >= 100) return String(Math.round(n / 5) * 5)
   const whole = Math.floor(n)
   const frac = n - whole
-  if (frac < 0.1) return String(whole || Math.round(n * 10) / 10)
-  if (frac > 0.92) return String(whole + 1)
-  const hit = FRACTIONS.find(([v]) => Math.abs(frac - v) < 0.07)
+  if (frac < 0.02) return String(whole || Math.round(n * 100) / 100)
+  if (frac > 0.98) return String(whole + 1)
+  // Alleen netjes afronden naar een breuk als de hoeveelheid er echt dichtbij zit.
+  const hit = FRACTIONS.find(([v]) => Math.abs(frac - v) < 0.03)
   if (hit) return whole ? `${whole} ${hit[1]}` : hit[1]
   return String(Math.round(n * 10) / 10).replace('.', ',')
 }
